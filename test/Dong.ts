@@ -19,46 +19,54 @@ describe("Dong", async function () {
   })
 
   describe("Deployment", async function () {
+    
     it("Has been deployed on an address successfully", async () => {
       expect(contract.address === null).to.equal(false);
     })
 
-    it("Calculates the dong amount correctly", async () => {
-      const amount = await contract.dong();
-      console.log(ethers.utils.formatEther(amount));
+    describe("Parameters", async () => {
 
-      console.log("------------");
+      it("Sets the beneficiary name correctly", async () => {
+        const response = await contract.beneficiaryName();
+        expect(response).to.equal("Kami");
+      })
 
-      const number = 20/6;
-      console.log(number.toFixed(18));
+      it("Sets the number of contributors correctly", async () => {
+        const response = await contract.contributors();
+        expect(response.toNumber()).to.equal(6);
+      })
 
-      // expect(ethers.utils.formatEther(amount)).to.equal(20/6);
+      it("Sets the total amount correctly", async () => {
+        const response = await contract.remainingAmount();
+        const response+ = ethers.utils.formatEther(response)
+        expect(.toNumber()).to.equal(20);
+      })
+
+      // it("Sets the beneficiary's address correctly", async () => {
+      //   const response = await contract.beneficiary();
+      //   expect(response).to.equal(beneficiary);
+      // })
+
+
     })
 
-    // it("Sets the beneficiary name correctly", async () => {
-    //   const name = contract.beneficiaryName();
-    //   expect(name).to.equal("Kami");
+    
+
+
+
+
+
+    // it("Calculates the dong amount correctly", async () => {
+    //   const response0 = await contract.dong();
+    //   const response1 = "3.333333333333333333";
+    //   expect(ethers.utils.formatEther(response0)).to.equal(response1);
     // })
 
-    // it("Sets the number of contributors correctly", async () => {
-    //   const number = contract.contributors();
-    //   expect(number).to.equal(6);
-    // })
 
-    // it("Sets the beneficiary's address correctly", async () => {
-    //   const address = contract.beneficiary();
-    //   expect(address).to.equal(beneficiary);
-    // })
+
+
   })
 })
-
-
-
-
-
-
-
-
 //   describe("Deployment", function () {
 //     it("Should set the right unlockTime", async function () {
 //       const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
