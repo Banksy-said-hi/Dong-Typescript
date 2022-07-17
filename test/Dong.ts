@@ -1,3 +1,4 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { AddressType } from "typechain";
@@ -5,13 +6,17 @@ import { Dong } from "../typechain-types";
 
 describe("Dong", async function () {
   let contract: Dong;
-  let beneficiary;
-  let deployer;
+  let beneficiary: SignerWithAddress;
+  let deployer: SignerWithAddress;
+  let user_1: SignerWithAddress;
+  let user_2: SignerWithAddress;
   
   beforeEach(async() => {
     const accounts = await ethers.getSigners();
     deployer = accounts[0];
     beneficiary = accounts[1];
+    user_1 = accounts[2];
+    user_2 = accounts[3];
 
     const Dong = await ethers.getContractFactory("Dong");
     contract = await Dong.deploy(beneficiary.address, 20, 6, "Kami");
@@ -19,13 +24,12 @@ describe("Dong", async function () {
   })
 
   describe("Deployment", async function () {
-    
-    it("Has been deployed on an address successfully", async () => {
-      expect(contract.address === null).to.equal(false);
-    })
+
+    it("Has been deployed on an address successfully", async function () {
+        expect(contract.address === null).to.equal(false);
+      })
 
     describe("Parameters", async () => {
-
       it("Sets the beneficiary name correctly", async () => {
         const response = await contract.beneficiaryName();
         expect(response).to.equal("Kami");
@@ -36,59 +40,40 @@ describe("Dong", async function () {
         expect(response.toNumber()).to.equal(6);
       })
 
-      it("Sets the total amount correctly", async () => {
+      it("Sets the total amount correctly to 20", async () => {
         const response = await contract.remainingAmount();
-        const response+ = ethers.utils.formatEther(response)
-        expect(.toNumber()).to.equal(20);
+        expect(ethers.utils.formatEther(response).slice(0, 2)).to.equal("20");
       })
 
-      // it("Sets the beneficiary's address correctly", async () => {
-      //   const response = await contract.beneficiary();
-      //   expect(response).to.equal(beneficiary);
-      // })
-
-
+      it("Sets the beneficiary's address correctly", async () => {
+        const response = await contract.beneficiary();
+        expect(response).to.equal(beneficiary.address);
+      })
     })
 
-    
+    describe("calculations", () => {
+      it("Calculates the dong amount correctly", async () => {
+        const response0 = await contract.dong();
+        const response1 = "3.333333333333333333";
+        expect(ethers.utils.formatEther(response0)).to.equal(response1);
+      })
+    })
+  })
 
-
-
-
-
-    // it("Calculates the dong amount correctly", async () => {
-    //   const response0 = await contract.dong();
-    //   const response1 = "3.333333333333333333";
-    //   expect(ethers.utils.formatEther(response0)).to.equal(response1);
-    // })
-
-
-
-
+  describe("Interaction", () => {
+    describe("Paying Dong", () => {
+      it("Does not accept a transaction without payment", async () => {
+        await expect(contract.connect(user_1).payDong("kami", { value: 0 })).to.be.revertedWith("msg.value must be at least equal to dong");
+      })
+    })
   })
 })
-//   describe("Deployment", function () {
-//     it("Should set the right unlockTime", async function () {
-//       const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
 
-//       expect(await lock.unlockTime()).to.equal(unlockTime);
-//     });
 
-//     it("Should set the right owner", async function () {
-//       const { lock, owner } = await loadFixture(deployOneYearLockFixture);
 
-//       expect(await lock.owner()).to.equal(owner.address);
-//     });
 
-//     it("Should receive and store the funds to lock", async function () {
-//       const { lock, lockedAmount } = await loadFixture(
-//         deployOneYearLockFixture
-//       );
 
-//       expect(await ethers.provider.getBalance(lock.address)).to.equal(
-//         lockedAmount
-//       );
-//     });
+
 
 //     it("Should fail if the unlockTime is not in the future", async function () {
 //       // We don't use the fixture here because we want a different deployment
