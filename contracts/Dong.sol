@@ -7,6 +7,7 @@ import "hardhat/console.sol";
 // TODO: Chainlink price data
 
 contract Dong {
+    uint256 public totalFixedAmount;
     uint256 public remainingAmount;
     uint256 public contributors;
     uint256 public dong;
@@ -31,7 +32,8 @@ contract Dong {
         creator = msg.sender;
         beneficiary = _beneficiary;
         beneficiaryName = _name;
-        remainingAmount = 1 ether * _totalAmount;
+        totalFixedAmount = 1 ether * _totalAmount;
+        remainingAmount = (101 * (totalFixedAmount)) / 100;
         contributors = _contributors;
         dong = remainingAmount / contributors;
     }
@@ -60,7 +62,7 @@ contract Dong {
         payable(msg.sender).transfer(reversal);
 
         if (remainingAmount == 0) {
-            payable(beneficiary).transfer((9 * (address(this).balance)) / 10);
+            payable(beneficiary).transfer(totalFixedAmount);
             payable(creator).transfer(address(this).balance);
             finished = true;
         }
