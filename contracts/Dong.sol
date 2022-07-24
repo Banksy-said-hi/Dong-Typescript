@@ -3,10 +3,13 @@ pragma solidity ^0.8.9;
 
 // Import this file to use console.log
 import "hardhat/console.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 // TODO: Chainlink price data
 
 contract Dong {
+    AggregatorV3Interface internal priceFeed;
+
     uint256 public totalFixedAmount;
     uint256 public remainingAmount;
     uint256 public contributors;
@@ -29,6 +32,9 @@ contract Dong {
         uint256 _contributors,
         string memory _name
     ) {
+        priceFeed = AggregatorV3Interface(
+            0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
+        );
         creator = msg.sender;
         beneficiary = _beneficiary;
         beneficiaryName = _name;
@@ -36,6 +42,21 @@ contract Dong {
         remainingAmount = (101 * (totalFixedAmount)) / 100;
         contributors = _contributors;
         dong = remainingAmount / contributors;
+    }
+
+    function getLatestPrice() public view returns (int256) {
+        (
+            ,
+            /*uint80 roundID*/
+            int256 price,
+            ,
+            ,
+
+        ) = /*uint startedAt*/
+            /*uint timeStamp*/
+            /*uint80 answeredInRound*/
+            priceFeed.latestRoundData();
+        return price;
     }
 
     function payDong(string calldata _name) public payable {

@@ -80,7 +80,9 @@ describe("Dong", async function () {
         await expect(contract.connect(user_1).payDong("kami", { value: 0 })).to.be.revertedWith("msg.value must be at least equal to dong");
       })
 
+      // =================================
       // TODO: Find out where that tiny amount of money goes
+      
       it("Cannot issue a payDong( ) transaction if the contract has been closed already", async () => {
         const response = await contract.dong();
 
