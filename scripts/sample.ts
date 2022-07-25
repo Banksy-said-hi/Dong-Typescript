@@ -2,28 +2,24 @@ import {ethers, network} from "hardhat";
 
 async function main() {
 
-    // Getting all of the accounts of the provider
+    console.log(`Trying to connect to the ${network.name} network`);
+
+    console.log("=============================================");
+
+    console.log("Retrieving our account!");
     const accounts = await ethers.getSigners();
-    console.log(accounts);
+    const address = accounts[0].address;
+    const tx = await accounts[0].getBalance();
+    const balance = ethers.utils.formatEther(tx);
+    console.log(`Our account is ${address} with the balance of ${balance} ETH`);
 
-    console.log(network.name);
+    console.log("=============================================");
 
-    console.log(network.provider);
-
-    console.log(network.config);
-
-
-
-    // Dong = await ethers.getContractFactory("Dong");
-    // console.log(Dong);
-
-
-
-    // instance = await Dong.deploy(beneficiary.address, 20, 6, "Kami");
-    // await instance.deployed();
-
-    // console.log(`A dong contract has successfuly been deployed on ${instance.address}`);
-    // console.log("");
+    console.log("Trying to deploy a contract")
+    const Dong = await ethers.getContractFactory("Dong");
+    const instance = await Dong.deploy(accounts[0].address, 20, 6, "Kami");
+    await instance.deployed();
+    console.log(`The smart contract is deployed on ${instance.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
