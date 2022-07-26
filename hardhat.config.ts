@@ -9,6 +9,8 @@ const { API_URL, PRIVATE_KEY } = process.env;
 
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "hardhat-gas-reporter"
+
 
 
 const config: HardhatUserConfig = {

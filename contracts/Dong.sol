@@ -5,13 +5,12 @@ pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-// TODO: Chainlink price data
-
 contract Dong {
     AggregatorV3Interface internal priceFeed;
 
-    uint256 public totalFixedAmount;
-    uint256 public remainingAmount;
+    uint256 public ethPrice;
+    uint256 public totalDollarAmount;
+    uint256 public remainingETHAmount;
     uint256 public contributors;
     uint256 public dong;
     uint256 public counter;
@@ -19,43 +18,49 @@ contract Dong {
     string public beneficiaryName;
 
     address public beneficiary;
-    address public creator;
+    // address public creator;
 
     bool public finished;
 
     mapping(address => uint256) public payment;
     mapping(uint256 => string) public names;
 
+    // TODO (1): This constructor exceeds the block gas limit due to heavy calculations
+    // Try to resolve this issue
+
+    // TODO (2): The users needs to submit the overall amount in Dollars
+    // Make the contract work with the dollar input
+
     constructor(
         address _beneficiary,
-        uint256 _totalAmount,
+        uint256 _totalDollarAmount,
         uint256 _contributors,
         string memory _name
     ) {
         priceFeed = AggregatorV3Interface(
             0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
         );
-        creator = msg.sender;
+
+        ethPrice = uint256(getLatestPrice());
+        remainingETHAmount = _totalDollarAmount / ethPrice;
+        dong = remainingETHAmount / contributors;
+
+        // creator = msg.sender;
         beneficiary = _beneficiary;
-        beneficiaryName = _name;
-        totalFixedAmount = 1 ether * _totalAmount;
-        remainingAmount = (101 * (totalFixedAmount)) / 100;
+        totalDollarAmount = _totalDollarAmount;
         contributors = _contributors;
-        dong = remainingAmount / contributors;
+        beneficiaryName = _name;
     }
 
     function getLatestPrice() public view returns (int256) {
         (
             ,
             /*uint80 roundID*/
-            int256 price,
+            int256 price, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
             ,
             ,
 
-        ) = /*uint startedAt*/
-            /*uint timeStamp*/
-            /*uint80 answeredInRound*/
-            priceFeed.latestRoundData();
+        ) = priceFeed.latestRoundData();
         return price;
     }
 
@@ -66,15 +71,15 @@ contract Dong {
         uint256 reversal;
         uint256 net;
 
-        if (msg.value <= remainingAmount) {
+        if (msg.value <= remainingETHAmount) {
             reversal = msg.value % dong;
             net = msg.value - reversal;
         } else {
-            reversal = msg.value - remainingAmount;
-            net = remainingAmount;
+            reversal = msg.value - remainingETHAmount;
+            net = remainingETHAmount;
         }
 
-        remainingAmount -= net;
+        remainingETHAmount -= net;
         payment[msg.sender] += net;
 
         counter += 1;
@@ -82,9 +87,8 @@ contract Dong {
 
         payable(msg.sender).transfer(reversal);
 
-        if (remainingAmount == 0) {
-            payable(beneficiary).transfer(totalFixedAmount);
-            payable(creator).transfer(address(this).balance);
+        if (remainingETHAmount == 0) {
+            payable(beneficiary).transfer(address(this).balance);
             finished = true;
         }
     }
