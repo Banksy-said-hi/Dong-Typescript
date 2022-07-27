@@ -18,7 +18,7 @@ async function main() {
 
     console.log("Trying to deploy a contract!")
     const Dong = await ethers.getContractFactory("Dong");
-    const instance = await Dong.deploy(accounts[0].address, 20, 200, "Kami", {gasPrice: });
+    const instance = await Dong.deploy(accounts[0].address, 20, 200, "Kami");
     await instance.deployed();
     console.log("Done");
     const receipt = instance.deployTransaction
