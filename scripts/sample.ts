@@ -1,6 +1,7 @@
 import {ethers, network} from "hardhat";
 
 async function main() {
+    console.log("=============================================");
 
     console.log(`Trying to connect to the ${network.name} network`);
 

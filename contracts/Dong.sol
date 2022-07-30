@@ -8,7 +8,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 contract Dong {
     AggregatorV3Interface internal priceFeed;
 
-    uint256 public ethPrice;
+    int256 public ethPrice;
     uint256 public totalDollarAmount;
     uint256 public remainingETHAmount;
     uint256 public contributors;
@@ -41,9 +41,9 @@ contract Dong {
             0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
         );
 
-        ethPrice = uint256(getLatestPrice());
-        remainingETHAmount = _totalDollarAmount / ethPrice;
-        dong = remainingETHAmount / contributors;
+        ethPrice = getLatestPrice();
+        // remainingETHAmount = _totalDollarAmount / ethPrice;
+        // dong = remainingETHAmount / contributors;
 
         // creator = msg.sender;
         beneficiary = _beneficiary;
