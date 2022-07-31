@@ -26,11 +26,11 @@ async function main() {
     const cost = receipt.gasPrice?.toString();
     console.log(`The smart contract is deployed on ${instance.address} with the cost of ${cost} WEI`);
     const tx1 = await instance.ethPrice();
-    const response1 = tx1.toString()
+    const response1 = ethers.utils.formatEther(tx1);
     console.log(`The ETH price is equal to ${response1}`);
-    const tx2 = await instance.dong();
-    const response2 = tx2.toString()
-    console.log(`Dong is ${response2}`);
+    // const tx2 = await instance.dong();
+    // const response2 = tx2.toString()
+    // console.log(`Dong is ${response2}`);
 
 
     // console.log("=============================================");

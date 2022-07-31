@@ -25,11 +25,8 @@ contract Dong {
     mapping(address => uint256) public payment;
     mapping(uint256 => string) public names;
 
-    // TODO (1): This constructor exceeds the block gas limit due to heavy calculations
-    // Try to resolve this issue
-
-    // TODO (2): The users needs to submit the overall amount in Dollars
-    // Make the contract work with the dollar input
+    // TODO:
+    // Try to convert the Chainlink response to the uint256 and move on with the project
 
     constructor(
         address _beneficiary,
@@ -41,7 +38,8 @@ contract Dong {
             0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
         );
 
-        ethPrice = getLatestPrice();
+        ethPrice = uint256(getLatestPrice());
+
         // remainingETHAmount = _totalDollarAmount / ethPrice;
         // dong = remainingETHAmount / contributors;
 
