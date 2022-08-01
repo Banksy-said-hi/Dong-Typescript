@@ -8,7 +8,10 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 contract Dong {
     AggregatorV3Interface internal priceFeed;
 
-    int256 public ethPrice;
+    int256 public response;
+    uint8 public decimals;
+    uint256 public ethPrice;
+
     uint256 public totalDollarAmount;
     uint256 public remainingETHAmount;
     uint256 public contributors;
@@ -38,7 +41,7 @@ contract Dong {
             0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
         );
 
-        ethPrice = uint256(getLatestPrice());
+        getLatestPrice();
 
         // remainingETHAmount = _totalDollarAmount / ethPrice;
         // dong = remainingETHAmount / contributors;
@@ -50,16 +53,21 @@ contract Dong {
         beneficiaryName = _name;
     }
 
-    function getLatestPrice() public view returns (int256) {
+    function getLatestPrice() private returns (int256) {
         (
             ,
             /*uint80 roundID*/
-            int256 price, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
+            response, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
             ,
             ,
 
         ) = priceFeed.latestRoundData();
-        return price;
+        calculateETHPrice(response);
+        return (response);
+    }
+
+    function calculateETHPrice(int256 _price) private {
+        ethPrice = uint256(_price) * 10000000000;
     }
 
     function payDong(string calldata _name) public payable {

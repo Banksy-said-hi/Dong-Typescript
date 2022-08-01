@@ -4,6 +4,7 @@ async function main() {
     console.log("=============================================");
 
     console.log(`Trying to connect to the ${network.name} network`);
+    console.log("Done");
 
     console.log("=============================================");
 
@@ -25,9 +26,18 @@ async function main() {
     const receipt = instance.deployTransaction
     const cost = receipt.gasPrice?.toString();
     console.log(`The smart contract is deployed on ${instance.address} with the cost of ${cost} WEI`);
+
+    console.log("=============================================");
+
+    console.log("Trying to get ETH price from Chainlink Oracle");
+    console.log("Done");
     const tx1 = await instance.ethPrice();
     const response1 = ethers.utils.formatEther(tx1);
-    console.log(`The ETH price is equal to ${response1}`);
+    console.log(`The ETH is $${response1}`);
+
+    // const tx1 = await instance.ethPrice();
+    // const response1 = ethers.utils.formatEther(tx1);
+    // console.log(`The ETH price is equal to ${response1}`);
     // const tx2 = await instance.dong();
     // const response2 = tx2.toString()
     // console.log(`Dong is ${response2}`);
