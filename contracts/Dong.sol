@@ -5,6 +5,10 @@ pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
+// TODO:
+// (1) Change the chainlink pricefeed contract to be able to retrieve the Polygon price
+// (2) Modify the script to make it calculate the dong correctly
+
 contract Dong {
     AggregatorV3Interface internal priceFeed;
 
@@ -27,9 +31,6 @@ contract Dong {
 
     mapping(address => uint256) public payment;
     mapping(uint256 => string) public names;
-
-    // TODO:
-    // Try to convert the Chainlink response to the uint256 and move on with the project
 
     constructor(
         address _beneficiary,
