@@ -6,9 +6,13 @@ import "hardhat/console.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 // TODO:
-// Try to fix the Chainlink interaction, it returns "0" as the current MATIC price
+
+// (1) Try to fix the Chainlink interaction, it returns "0" as the current MATIC price
 // It may be relevant to the MATIC balance of the caller contract or msg.sender
 // Ask Chainlink specialists in your Telegram group
+
+// (2) Integrate the front end to the typescript version of Dong! It may be needed to
+// learn and implement some typescript modifications through your code
 
 contract Dong {
     AggregatorV3Interface internal priceFeed;
