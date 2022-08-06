@@ -3,8 +3,8 @@ import {ethers, network} from "hardhat";
 async function main() {
     console.log("=============================================");
 
-    console.log(`Trying to connect to the ${network.name} network`);
-    console.log("Done Done");
+    console.log("Trying to connect ...");
+    console.log(`Vamos! We are on the ${network.name} network!`);
 
     console.log("=============================================");
 
@@ -13,7 +13,7 @@ async function main() {
     const accounts = await ethers.getSigners();
     const address = accounts[0].address;
     const tx = await accounts[0].getBalance();
-    console.log("Done! Yohooo");
+    console.log("Successful!");
     const balance = ethers.utils.formatEther(tx).slice(0, 6);
     console.log(`Our account is ${address} with the balance of ${balance} ETH`);
 
@@ -32,15 +32,18 @@ async function main() {
     console.log("=============================================");
 
     console.log("Trying to get the Matic price from the Chainlink Oracle");
-    console.log("Working ...");
     const tx1 = await instance.getLatestPrice();
-    console.log(ethers.utils.formatEther(tx1.value));
-    // const tx2 = await instance.maticPrice();
-    // const response1 = ethers.utils.formatEther(tx2);
-    // console.log("Done!");
-    // console.log(`The Matic price currently is $${response1}`);
+    console.log(tx1);
+    // console.log(receipt1);
+    // console.log("Working ...");
+    // console.log(`Current Matic price: $${(tx1.toNumber()/100000000).toFixed(4)}`);
 
     console.log("=============================================");
+
+    // console.log("Trying to read the assigned value");
+    // console.log("Working ...");
+    // const tx2 = await instance.response();
+    // console.log(`The response is ${tx2.toNumber()}`);
 
     // console.log("Trying to get the dong amount");
     // console.log("Working ...");

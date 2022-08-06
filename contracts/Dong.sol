@@ -7,10 +7,6 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 // TODO:
 
-// (1) Try to fix the Chainlink interaction, it returns "0" as the current MATIC price
-// It may be relevant to the MATIC balance of the caller contract or msg.sender
-// Ask Chainlink specialists in your Telegram group
-
 // (2) Integrate the front end to the typescript version of Dong! It may be needed to
 // learn and implement some typescript modifications through your code
 
@@ -18,6 +14,7 @@ contract Dong {
     AggregatorV3Interface internal priceFeed;
 
     uint256 public maticPrice;
+    int256 public response;
 
     uint256 public totalDollarAmount;
     uint256 public contributors;
@@ -48,16 +45,17 @@ contract Dong {
         beneficiaryName = _beneficiaryName;
     }
 
-    function getLatestPrice() public returns (int256) {
+    function getLatestPrice() public view returns (int256, uint8) {
         (
             ,
             /*uint80 roundID*/
-            int256 response, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
+            int256 price, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
             ,
             ,
 
         ) = priceFeed.latestRoundData();
-        return response;
+        uint8 decimals = priceFeed.decimals();
+        return (price, decimals);
     }
 
     function calculateETHPrice(int256 _price) private {
