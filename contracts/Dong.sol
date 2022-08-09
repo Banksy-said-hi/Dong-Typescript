@@ -7,19 +7,21 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 // TODO:
 
+// Convert the total entered amount in dollar to MATIC tokens
+
 // (2) Integrate the front end to the typescript version of Dong! It may be needed to
 // learn and implement some typescript modifications through your code
 
 contract Dong {
     AggregatorV3Interface internal priceFeed;
 
-    uint256 public maticPrice;
-    int256 public response;
+    int256 public totalMaticTokens;
+    int256 public price;
 
-    uint256 public totalDollarAmount;
-    uint256 public contributors;
-    uint256 public dong;
-    uint256 public counter;
+    int256 public totalDollarAmount;
+    int256 public contributors;
+    int256 public dong;
+    int256 public counter;
 
     string public beneficiaryName;
 
@@ -27,75 +29,69 @@ contract Dong {
 
     bool public finished;
 
-    mapping(address => uint256) public payment;
+    mapping(address => int256) public payment;
     mapping(uint256 => string) public names;
 
     constructor(
         address _beneficiary,
-        uint256 _totalDollarAmount,
-        uint256 _contributors,
+        int256 _totalDollarAmount,
+        int256 _contributors,
         string memory _beneficiaryName
     ) {
         priceFeed = AggregatorV3Interface(
             0x7794ee502922e2b723432DDD852B3C30A911F021
         );
+
+        getLatestPrice();
+
         beneficiary = _beneficiary;
         totalDollarAmount = _totalDollarAmount;
         contributors = _contributors;
         beneficiaryName = _beneficiaryName;
     }
 
-    function getLatestPrice() public view returns (int256, uint8) {
+    function getLatestPrice() public {
         (
             ,
             /*uint80 roundID*/
-            int256 price, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
+            price, /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/
             ,
             ,
 
         ) = priceFeed.latestRoundData();
-        uint8 decimals = priceFeed.decimals();
-        return (price, decimals);
+        calculator(price);
     }
 
-    function calculateETHPrice(int256 _price) private {
-        maticPrice = uint256(_price) * 10000000000;
+    function calculator(int256 _price) public {
+        totalMaticTokens = ((totalDollarAmount * 10**8) / _price);
     }
 
-    function calculateDong() public returns (uint256) {
-        getLatestPrice();
-        dong = totalDollarAmount / maticPrice;
-        return dong;
-    }
+    // function payDong(string calldata _name) public payable {
+    //     require(msg.value >= dong, "msg.value must be at least equal to dong");
+    //     require(finished == false, "The process has already been finished");
 
-    function payDong(string calldata _name) public payable {
-        // updateDong();
+    //     uint256 reversal;
+    //     uint256 net;
 
-        require(msg.value >= dong, "msg.value must be at least equal to dong");
-        require(finished == false, "The process has already been finished");
+    //     if (msg.value <= (totalDollarAmount / maticPrice)) {
+    //         reversal = msg.value % (dong * maticPrice);
+    //         net = msg.value - reversal;
+    //     } else {
+    //         reversal = msg.value - (totalDollarAmount / maticPrice);
+    //         net = totalDollarAmount;
+    //     }
 
-        uint256 reversal;
-        uint256 net;
+    //     totalDollarAmount -= net;
+    //     payment[msg.sender] += net;
 
-        if (msg.value <= (totalDollarAmount / maticPrice)) {
-            reversal = msg.value % (dong * maticPrice);
-            net = msg.value - reversal;
-        } else {
-            reversal = msg.value - (totalDollarAmount / maticPrice);
-            net = totalDollarAmount;
-        }
+    //     names[counter] = _name;
+    //     counter += 1;
 
-        totalDollarAmount -= net;
-        payment[msg.sender] += net;
+    //     payable(msg.sender).transfer(reversal);
 
-        names[counter] = _name;
-        counter += 1;
-
-        payable(msg.sender).transfer(reversal);
-
-        if (totalDollarAmount == 0) {
-            payable(beneficiary).transfer(address(this).balance);
-            finished = true;
-        }
-    }
+    //     if (totalDollarAmount == 0) {
+    //         payable(beneficiary).transfer(address(this).balance);
+    //         finished = true;
+    //     }
+    // }
 }

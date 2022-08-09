@@ -4,7 +4,7 @@ async function main() {
     console.log("=============================================");
 
     console.log("Trying to connect ...");
-    console.log(`Vamos! We are on the ${network.name} network!`);
+    console.log(`We are on the ${network.name} network!`);
 
     console.log("=============================================");
 
@@ -27,23 +27,24 @@ async function main() {
     console.log("Done!");
     const receipt = instance.deployTransaction
     const cost = receipt.gasPrice?.toString();
-    console.log(`The smart contract is deployed on ${instance.address} with the cost of ${cost} WEI`);
+    console.log(`The smart contract is deployed on ${instance.address} with the gas cost of ${cost} WEI`);
 
     console.log("=============================================");
 
     console.log("Trying to get the Matic price from the Chainlink Oracle");
-    const tx1 = await instance.getLatestPrice();
-    console.log(tx1);
-    // console.log(receipt1);
-    // console.log("Working ...");
-    // console.log(`Current Matic price: $${(tx1.toNumber()/100000000).toFixed(4)}`);
+    console.log("Working on that...!");
+    const tx1 = await instance.price();
+    console.log(`MATIC price per token is ${tx1.toNumber()}`);
 
     console.log("=============================================");
 
-    // console.log("Trying to read the assigned value");
-    // console.log("Working ...");
-    // const tx2 = await instance.response();
-    // console.log(`The response is ${tx2.toNumber()}`);
+    console.log("Trying to read the totalMaticTokens variable");
+    console.log("Working ...");
+    const tx2 = await instance.totalMaticTokens();
+    console.log(tx2);
+    console.log(`TO STRING: The response is ${tx2.toString()} MATIC tokens`);
+    console.log(`TO NUMBER: The response is ${tx2.toNumber()} MATIC tokens`);
+
 
     // console.log("Trying to get the dong amount");
     // console.log("Working ...");
