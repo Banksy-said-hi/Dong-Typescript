@@ -38,13 +38,23 @@ async function main() {
 
     console.log("=============================================");
 
-    console.log("Trying to read the totalMaticTokens variable");
+    console.log("Trying to read raw local variables");
     console.log("Working ...");
-    const tx2 = await instance.totalMaticTokens();
-    console.log(tx2);
-    console.log(`TO STRING: The response is ${tx2.toString()} MATIC tokens`);
-    console.log(`TO NUMBER: The response is ${tx2.toNumber()} MATIC tokens`);
+    const tx2 = await instance.totalDollarAmount();
+    console.log(`Total dollar amount is $${tx2.toNumber()}`);
 
+    const tx3 = await instance.contributors();
+    console.log(`Contributors are ${tx3.toNumber()} people`);
+
+    const tx4 = await instance.price();
+    console.log(`Matic token price is saved as $${tx4.toNumber()}`);
+
+    const tx5 = await instance.totalMaticTokens();
+    console.log(`All in all, ${tx5.toNumber()} matic tokens need to be gathered`);
+
+    const tx6 = await instance.dong();
+    console.log(tx6);
+    console.log(`And finally, each user has to pay ${tx6} matic tokens`);
 
     // console.log("Trying to get the dong amount");
     // console.log("Working ...");

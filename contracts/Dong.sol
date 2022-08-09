@@ -7,7 +7,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 // TODO:
 
-// Convert the total entered amount in dollar to MATIC tokens
+// (1) How to make it possible for the dong local variable to represent amounts less than 1
 
 // (2) Integrate the front end to the typescript version of Dong! It may be needed to
 // learn and implement some typescript modifications through your code
@@ -42,12 +42,12 @@ contract Dong {
             0x7794ee502922e2b723432DDD852B3C30A911F021
         );
 
-        getLatestPrice();
-
         beneficiary = _beneficiary;
         totalDollarAmount = _totalDollarAmount;
         contributors = _contributors;
         beneficiaryName = _beneficiaryName;
+
+        getLatestPrice();
     }
 
     function getLatestPrice() public {
@@ -59,11 +59,11 @@ contract Dong {
             ,
 
         ) = priceFeed.latestRoundData();
-        calculator(price);
-    }
-
-    function calculator(int256 _price) public {
-        totalMaticTokens = ((totalDollarAmount * 10**8) / _price);
+        totalMaticTokens =
+            (110 * ((totalDollarAmount * 100000000) / price)) /
+            100;
+        // Exactly here we reach zero value for dong local variable
+        dong = totalMaticTokens / contributors;
     }
 
     // function payDong(string calldata _name) public payable {
