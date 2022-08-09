@@ -34,7 +34,7 @@ async function main() {
     console.log("Trying to get the Matic price from the Chainlink Oracle");
     console.log("Working on that...!");
     const tx1 = await instance.price();
-    console.log(`MATIC price per token is ${tx1.toNumber()}`);
+    console.log(`Price per MATIC token is $${(tx1.toNumber()/100000000).toFixed(2)}`);
 
     console.log("=============================================");
 
