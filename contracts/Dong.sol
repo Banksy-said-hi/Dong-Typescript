@@ -8,6 +8,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 // TODO:
 
 // (1) How to make it possible for the dong local variable to represent amounts less than 1
+// Try familiarizing yourself to work with both decimals and price retrieved from Chainlink Oracle
 
 // (2) Integrate the front end to the typescript version of Dong! It may be needed to
 // learn and implement some typescript modifications through your code
@@ -59,6 +60,7 @@ contract Dong {
             ,
 
         ) = priceFeed.latestRoundData();
+        // *10**18
         totalMaticTokens =
             (110 * ((totalDollarAmount * 100000000) / price)) /
             100;
